@@ -3,14 +3,17 @@ jobs:
   build:
     docker:
       - image: cimg/base:current
+        environment:
+          DOCKER_BUILDKIT: '1'
 
     steps:
       - checkout
 
-      - run:
-          name: Greeting
-          command: echo Hello, world.
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: false
 
       - run:
-          name: Print the Current Time
-          command: date
+          name: Build a container
+          command: |
+            docker build -t app-ci/build -f Dockerfile . --target build
