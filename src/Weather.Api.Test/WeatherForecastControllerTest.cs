@@ -26,6 +26,6 @@ public class WeatherForecastControllerTest
         var controller = new WeatherForecastController(loggerMock.Object);
 
         var result = controller.Get() as IEnumerable<WeatherForecast>;
-        result.Should().HaveCount(0);
+        result.Should().HaveCount(5);
     }
 }
