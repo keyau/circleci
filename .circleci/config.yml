@@ -24,3 +24,16 @@ jobs:
           name: Test app
           command: |
             docker build -t app-ci/test -f Dockerfile . --target test
+
+      - run:
+          name: Extract test result
+          when: always
+          command: |
+            docker cp $(docker create --rm app-ci/test):/artifacts ~/tests
+
+      - store_test_results:
+          name: Store tests results
+          path: ~/tests
+      - store_artifacts:
+          name: Store artifact
+          path: ~/tests
