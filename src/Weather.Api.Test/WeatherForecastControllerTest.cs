@@ -18,4 +18,14 @@ public class WeatherForecastControllerTest
         var result = controller.Get() as IEnumerable<WeatherForecast>;
         result.Should().HaveCount(5);
     }
+    
+    [Fact]
+    public void Get_ShouldReturnWeatherForecastResult_Failed()
+    {
+        var loggerMock = new Mock<ILogger<WeatherForecastController>>();
+        var controller = new WeatherForecastController(loggerMock.Object);
+
+        var result = controller.Get() as IEnumerable<WeatherForecast>;
+        result.Should().HaveCount(0);
+    }
 }

@@ -23,7 +23,9 @@ jobs:
       - run:
           name: Test app
           command: |
-            docker build -t app-ci/test -f Dockerfile . --target test
+            docker build -t app-ci/test -f Dockerfile . --target test \
+            && docker cp $(docker create --rm app-ci/test):/result ~/result \
+            && if [ -f ~/result/failed ]; then exit 1; else exit 0; fi
 
       - run:
           name: Extract test result

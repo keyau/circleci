@@ -30,10 +30,21 @@ COPY --from=dependencies /root/.nuget /root/.nuget
 COPY --from=dependencies /root/.dotnet /root/.dotnet
 COPY --from=build /app ./
 RUN echo "🧪 TEST" > /dev/null
-RUN dotnet test -c Release --no-build \
-  /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="/artifacts/coverage.xml" \
-  --test-adapter-path:. --logger:"junit;LogFilePath=/artifacts/test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-RUN dotnet reportgenerator "-reports:/artifacts/coverage.xml" "-targetdir:/artifacts/testreport" "-reporttypes:Html"
+RUN \
+  mkdir /result; \
+  dotnet test -c Release --no-build \
+    /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="/artifacts/coverage.xml" \
+    --test-adapter-path:. --logger:"junit;LogFilePath=/artifacts/test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"; \
+  exitcode=$?; \
+  if [ $exitcode -eq 0 ]; \
+  then \
+    dotnet reportgenerator "-reports:/artifacts/coverage.xml" "-targetdir:/artifacts/testreport" "-reporttypes:Html"; \
+  fi; \
+  if [ $exitcode -ne 0 ]; \
+  then \
+    touch /result/failed; \
+  fi; \
+  exit 0
 
 FROM base-build AS base-publish
 COPY --from=dependencies /root/.nuget /root/.nuget
