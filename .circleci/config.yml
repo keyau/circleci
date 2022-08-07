@@ -16,6 +16,11 @@ jobs:
           docker_layer_caching: false
 
       - run:
-          name: Build a container
+          name: Build app
           command: |
             docker build -t app-ci/build -f Dockerfile . --target build
+
+      - run:
+          name: Test app
+          command: |
+            docker build -t app-ci/test -f Dockerfile . --target test
