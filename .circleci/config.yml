@@ -37,3 +37,4 @@ jobs:
       - store_artifacts:
           name: Store artifact
           path: ~/tests
+          destination: tests
