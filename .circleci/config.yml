@@ -16,4 +16,4 @@ jobs:
       - run:
           name: Build a container
           command: |
-            docker build -t app-ci/build -f Dockerfile . --target build
+            docker build -t app-ci/build -f src/Dockerfile . --target build
