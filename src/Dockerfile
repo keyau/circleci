@@ -31,7 +31,6 @@ COPY --from=dependencies /root/.dotnet /root/.dotnet
 COPY --from=build /app ./
 RUN echo "🧪 TEST" > /dev/null
 RUN \
-  mkdir /result; \
   dotnet test -c Release --no-build \
     /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="/artifacts/coverage.xml" \
     --test-adapter-path:. --logger:"junit;LogFilePath=/artifacts/test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"; \
@@ -42,7 +41,7 @@ RUN \
   fi; \
   if [ $exitcode -ne 0 ]; \
   then \
-    touch /result/failed; \
+    touch /tmp/failed; \
   fi; \
   exit 0
 
